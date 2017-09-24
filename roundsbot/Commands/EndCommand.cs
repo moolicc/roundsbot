@@ -28,6 +28,7 @@ namespace roundsbot.Commands
             if (RoundData.CancelTokenSource != null)
             {
                 RoundData.End();
+                React(message, host, Emojies.OK);
             }
         }
     }

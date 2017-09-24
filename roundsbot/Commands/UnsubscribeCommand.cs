@@ -32,6 +32,7 @@ namespace roundsbot.Commands
             else
             {
                 host.Configuration.SubscribedUsers.Remove(message.Author.Id);
+                React(message, host, Emojies.OK);
             }
         }
     }

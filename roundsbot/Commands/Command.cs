@@ -12,5 +12,10 @@ namespace roundsbot.Commands
         public abstract string GetDescriptionText();
         public abstract string GetHelpText();
         public abstract void Trigger(DiscordMessage message, CommandHostModule host, params string[] args);
+
+        protected void React(DiscordMessage message, CommandHostModule host, string emoji)
+        {
+            message.CreateReactionAsync(DiscordEmoji.FromName(host.DiscordClient, Emojies.OK));
+        }
     }
 }

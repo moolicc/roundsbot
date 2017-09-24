@@ -30,6 +30,8 @@ namespace roundsbot.Commands
                 if (int.TryParse(args[0], out var length))
                 {
                     host.Configuration.RoundLength = length;
+                    React(message, host, Emojies.OK);
+
                     if (RoundData.RunTask != null)
                     {
                         host.NotifyUsers("Round length will reset once the next round starts.", false);

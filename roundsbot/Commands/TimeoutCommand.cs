@@ -30,6 +30,7 @@ namespace roundsbot.Commands
                 if (int.TryParse(args[0], out var count))
                 {
                     host.Configuration.TimeoutCount = count;
+                    React(message, host, Emojies.OK);
                 }
                 else
                 {

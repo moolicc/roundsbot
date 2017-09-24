@@ -9,6 +9,7 @@ namespace roundsbot
         public const string TIMER = ":stopwatch:";
         public const string SUBSCRIBE = ":notepad_spiral:";
         public const string WARNING = ":warning:";
+        public const string OK = ":ok_hand:";
 
         public static string[] FoodEmojies = new[]
         {

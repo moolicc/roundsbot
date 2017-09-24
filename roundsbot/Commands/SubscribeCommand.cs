@@ -34,6 +34,7 @@ namespace roundsbot.Commands
             else
             {
                 host.Configuration.SubscribedUsers.Add(message.Author.Id);
+                React(message, host, Emojies.OK);
             }
         }
     }
