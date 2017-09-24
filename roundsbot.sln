@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.10
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "rbbot", "rbbot\rbbot.csproj", "{2A57962B-D7CE-43B1-B4E1-88DFE9346CED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "roundsbot", "roundsbot\roundsbot.csproj", "{4C4A09A7-3D14-4964-93A9-70279233D2B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2A57962B-D7CE-43B1-B4E1-88DFE9346CED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2A57962B-D7CE-43B1-B4E1-88DFE9346CED}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2A57962B-D7CE-43B1-B4E1-88DFE9346CED}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2A57962B-D7CE-43B1-B4E1-88DFE9346CED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C4A09A7-3D14-4964-93A9-70279233D2B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C4A09A7-3D14-4964-93A9-70279233D2B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C4A09A7-3D14-4964-93A9-70279233D2B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C4A09A7-3D14-4964-93A9-70279233D2B3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
