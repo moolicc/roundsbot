@@ -28,6 +28,7 @@ namespace roundsbot.Commands
             //Bot icon source: https://github.com/iconic/open-iconic
             DiscordEmbedBuilder builder = new DiscordEmbedBuilder();
             builder.Title = "About";
+            builder.WithTimestamp(host.Configuration.ReleaseDate);
             builder.AddField("Version", host.Configuration.Version.ToString(), true);
             foreach (var contributor in host.Configuration.Authors)
             {
