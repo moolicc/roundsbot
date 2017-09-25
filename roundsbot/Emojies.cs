@@ -10,6 +10,8 @@ namespace roundsbot
         public const string SUBSCRIBE = ":notepad_spiral:";
         public const string WARNING = ":warning:";
         public const string OK = ":ok_hand:";
+        public const string PENSIVE = ":pensive:";
+        public const string NO_MOUTH = ":no_mouth:";
 
         public static string[] FoodEmojies = new[]
         {

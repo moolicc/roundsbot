@@ -12,9 +12,11 @@ namespace roundsbot
         public int CountdownStart { get; set; }
         public int TimeoutCount { get; set; }
         public List<ulong> SubscribedUsers { get; private set; }
+        public DateTime LaunchTime { get; private set; }
 
         public Configuration()
         {
+            LaunchTime = DateTime.Now;
             ChannelId = 0;
             RoundLength = 25;
             BreakLength = 5;

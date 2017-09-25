@@ -55,6 +55,7 @@ namespace roundsbot
             hostModule.Commands.Add(new Commands.SubscribeCommand());
             hostModule.Commands.Add(new Commands.UnsubscribeCommand());
             hostModule.Commands.Add(new Commands.HelpCommand());
+            hostModule.Commands.Add(new Commands.UptimeCommand());
         }
     }
 }

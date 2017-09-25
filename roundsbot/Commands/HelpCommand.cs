@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using DSharpPlus.Entities;
 using roundsbot.Modules;
 
@@ -15,17 +17,55 @@ namespace roundsbot.Commands
 
         public override string GetDescriptionText()
         {
-            throw new NotImplementedException();
+            return
+                "Recursively displays help information... Uh oh... Recursively displays help information... Uh oh... Recursively displays help information... Uh oh..." +
+                Environment.NewLine + "Recursively displays help information...Uh oh.. Recursi"+
+                Environment.NewLine + "(Seriously though, you can use \"help [command]\" to get more detailed information about the specified command.)";
         }
 
         public override string GetHelpText()
         {
-            throw new NotImplementedException();
+            return "What is this supposed to say?";
         }
 
         public override void Trigger(DiscordMessage message, CommandHostModule host, params string[] args)
         {
-            throw new NotImplementedException();
+            if (args.Length == 0)
+            {
+                DiscordEmbedBuilder builder = new DiscordEmbedBuilder();
+                builder.Title = "Available Commands";
+                lock (host)
+                {
+                    foreach (var hostCommand in host.Commands)
+                    {
+                        builder.AddField(hostCommand.GetName(), hostCommand.GetDescriptionText());
+                    }
+                }
+                SendList(message.Channel, builder.Build());
+            }
+            else if (args.Length == 1)
+            {
+                StringBuilder builder = new StringBuilder();
+                var command = host.Commands.FirstOrDefault(c => c.GetName() == args[0]);
+                if (command == null)
+                {
+                    SendMessage(message.Channel, "This is awkward. It seems like I have **no idea** what you're asking for help with. " + Emojies.NO_MOUTH);
+                    return;
+                }
+                builder.Append("**").Append(command.GetName()).Append("**");
+                builder.AppendLine();
+                builder.Append(command.GetHelpText());
+                SendMessage(message.Channel, builder.ToString());
+            }
+            else
+            {
+                SendMessage(message.Channel, "This is awkward. I have no idea what you meant by that. " + Emojies.PENSIVE);
+            }
+        }
+
+        private async void SendList(DiscordChannel channel, DiscordEmbed embed)
+        {
+            await channel.SendMessageAsync(embed: embed);
         }
     }
 }

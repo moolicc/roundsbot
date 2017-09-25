@@ -17,12 +17,12 @@ namespace roundsbot.Commands
 
         public override string GetDescriptionText()
         {
-            throw new NotImplementedException();
+            return "Starts running rounds.";
         }
 
         public override string GetHelpText()
         {
-            throw new NotImplementedException();
+            return "Starts running rounds using the values represented by the commands \"roundlength\" and \"breaklength\" to specify the amount of time (in minutes) rounds/breaks run for.";
         }
 
         public override void Trigger(DiscordMessage message, CommandHostModule host, params string[] args)
@@ -43,7 +43,7 @@ namespace roundsbot.Commands
         }
 
 
-        private void RunRound(CommandHostModule host)
+        private async Task RunRound(CommandHostModule host)
         {
             int roundCounter = 1;
 
@@ -60,21 +60,44 @@ namespace roundsbot.Commands
                 var countdownStart = host.Configuration.CountdownStart;
                 var breakLength = host.Configuration.BreakLength;
 
-                host.NotifyUsers($"{Emojies.TIMER} Round {roundCounter} is starting! {Emojies.TIMER}", true);
-
                 var endTime = startTime.AddMinutes(roundLength);
-                Thread.Sleep(endTime.Subtract(startTime).Subtract(TimeSpan.FromSeconds(countdownStart)));
+                host.NotifyUsers($"Round {roundCounter} is starting! {Emojies.TIMER}{Environment.NewLine}*Break at XX:{endTime.Minute:00}.*", true);
+                
+                while (true)
+                {
+                    if (startTime.Hour == endTime.Hour && startTime.Minute >= endTime.Minute)
+                    {
+                        break;
+                    }
+                    await host.DiscordClient.UpdateStatusAsync(
+                        new Game($"Rounds for {endTime.Subtract(startTime).Minutes} more minute(s)"));
+                    Thread.Sleep(30000);
+                    startTime = startTime.AddMinutes(0.5D);
+                }
+                //Thread.Sleep(endTime.Subtract(startTime).Subtract(TimeSpan.FromSeconds(countdownStart)));
 
-                Countdown(host.Configuration.CountdownStart);
-                Thread.Sleep(host.Configuration.CountdownStart * 1000);
+                //Countdown(host.Configuration.CountdownStart);
+                //Thread.Sleep(host.Configuration.CountdownStart * 1000);
 
-                var breakEndTime = endTime.AddMinutes(breakLength);
 
                 var foodEmojie = Emojies.FoodEmojies[new Random().Next(Emojies.FoodEmojies.Length)];
 
-                host.NotifyUsers($"{foodEmojie} Round over! Break until XX:{breakEndTime.Minute:00}! {foodEmojie}", true);
+                var breakEndTime = endTime.AddMinutes(breakLength);
+                host.NotifyUsers($"{foodEmojie} Round over! Break until **XX:{breakEndTime.Minute:00}**! {foodEmojie}", true);
 
-                Thread.Sleep(breakEndTime.Subtract(endTime));
+                //Thread.Sleep(breakEndTime.Subtract(endTime));
+                while (true)
+                {
+                    if (startTime.Hour == breakEndTime.Hour && startTime.Minute >= breakEndTime.Minute)
+                    {
+                        break;
+                    }
+                    await host.DiscordClient.UpdateStatusAsync(
+                        new Game($"Break for {breakEndTime.Subtract(startTime).Minutes} more minute(s)"));
+                    Thread.Sleep(30000);
+                    startTime = startTime.AddMinutes(0.5D);
+                }
+
                 if (RoundData.Activity)
                 {
                     RoundData.TimeoutTimer = 0;
@@ -86,7 +109,7 @@ namespace roundsbot.Commands
 
                 if (RoundData.TimeoutTimer >= host.Configuration.TimeoutCount)
                 {
-                    host.NotifyUsers("Ending rounds due to inactivity.", false);
+                    host.NotifyUsers("**Ending rounds due to inactivity.**", false);
                     break;
                 }
 

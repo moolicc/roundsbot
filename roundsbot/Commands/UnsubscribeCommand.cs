@@ -15,19 +15,19 @@ namespace roundsbot.Commands
 
         public override string GetDescriptionText()
         {
-            throw new NotImplementedException();
+            return "Marks you as one who is most certainly **not** interested in being notified when this bot feels like its necessary to notify you (At the start/end of a round).";
         }
 
         public override string GetHelpText()
         {
-            throw new NotImplementedException();
+            return "I hope you're kidding and don't really need an in-depth explanation of this command. :joy:";
         }
 
         public override void Trigger(DiscordMessage message, CommandHostModule host, params string[] args)
         {
             if (!host.Configuration.SubscribedUsers.Contains(message.Author.Id))
             {
-                host.NotifyUsers($"Excuse me sir/ma'am, but my records show that you are already not subscribed. {Emojies.SUBSCRIBE}{Environment.NewLine}*(Hint: Try `subscribe` to subscribe)*", false);
+                SendMessage(message.Channel, $"Excuse me sir/ma'am, but my records show that you are already not subscribed. {Emojies.SUBSCRIBE}{Environment.NewLine}*(Hint: Try `subscribe` to subscribe)*");
             }
             else
             {

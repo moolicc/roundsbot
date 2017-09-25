@@ -15,12 +15,12 @@ namespace roundsbot.Commands
 
         public override string GetDescriptionText()
         {
-            throw new NotImplementedException();
+            return "Gets/sets the amount of time (in minutes) a break between rounds lasts for.";
         }
 
         public override string GetHelpText()
         {
-            throw new NotImplementedException();
+            return "\"breaklength\" to get the current value or \"breaklength [integer]\" to set the value.";
         }
 
         public override void Trigger(DiscordMessage message, CommandHostModule host, params string[] args)
@@ -39,12 +39,12 @@ namespace roundsbot.Commands
                 }
                 else
                 {
-                    host.NotifyUsers("Invalid value. *(Hint: A valid number might work)*", false);
+                    SendMessage(message.Channel, "Invalid value. *(Hint: A valid number might work)*");
                 }
             }
             else
             {
-                host.NotifyUsers($"The current break length is {host.Configuration.BreakLength} minutes.", false);
+                SendMessage(message.Channel, $"The current break length is {host.Configuration.BreakLength} minutes.");
             }
         }
     }

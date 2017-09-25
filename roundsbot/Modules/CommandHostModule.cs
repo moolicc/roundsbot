@@ -50,14 +50,27 @@ namespace roundsbot.Modules
                 return;
             }
 
-            string message = e.Message.Content.Replace(DiscordClient.CurrentUser.Mention, "").Trim();
-            var parsed = ParseInput(message);
+            string messageContent = e.Message.Content.Replace(DiscordClient.CurrentUser.Mention, "");
+            var messages = new string[] { messageContent };
+            if (messageContent.Contains(';'))
+            {
+                messages = messageContent.Split(';');
+            }
+            foreach (var msg in messages)
+            {
+                var parsed = ParseInput(msg.Trim());
+                HandleMessage(parsed, e.Message);
+            }
+        }
+
+        private void HandleMessage((string name, string[] args) parsed, DiscordMessage message)
+        {
             if (string.IsNullOrWhiteSpace(parsed.name))
             {
                 //TODO: Output to a log with the tag: "discord_usererror".
                 return;
             }
-            ExecCommand(parsed.name, e.Message, parsed.args);
+            ExecCommand(parsed.name, message, parsed.args);
         }
 
         public async void NotifyUsers(string message, bool mention)
@@ -66,18 +79,18 @@ namespace roundsbot.Modules
             {
                 StringBuilder messageBuilder = new StringBuilder();
 
-                messageBuilder.Append($"{Emojies.WARNING} Attention:");
+                messageBuilder.Append($"{Emojies.WARNING} Attention");
                 for (var i = 0; i < Configuration.SubscribedUsers.Count; i++)
                 {
                     var userId = Configuration.SubscribedUsers[i];
                     var user = await DiscordClient.GetUserAsync(userId);
                     if (user.Presence.Status == UserStatus.Online || user.Presence.Status == UserStatus.Idle)
                     {
-                        if (i == Configuration.SubscribedUsers.Count - 1)
+                        if (i == Configuration.SubscribedUsers.Count - 1 && Configuration.SubscribedUsers.Count > 1)
                         {
                             messageBuilder.Append(" and");
                         }
-                        else if (i != 0)
+                        else if (i != 0 && Configuration.SubscribedUsers.Count > 1)
                         {
                             messageBuilder.Append(",");
                         }
@@ -85,7 +98,7 @@ namespace roundsbot.Modules
                     }
                 }
 
-                messageBuilder.Append(" ").Append(message);
+                messageBuilder.Append("! ").Append(message);
                 await DiscordClient.SendMessageAsync(await DiscordClient.GetChannelAsync(Configuration.ChannelId), messageBuilder.ToString());
             }
             else

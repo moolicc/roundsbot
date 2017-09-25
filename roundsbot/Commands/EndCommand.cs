@@ -15,12 +15,12 @@ namespace roundsbot.Commands
 
         public override string GetDescriptionText()
         {
-            throw new NotImplementedException();
+            return "Stops any rounds that are currently running.";
         }
 
         public override string GetHelpText()
         {
-            throw new NotImplementedException();
+            return "What can I say? This command takes no arguments. It has a clear purpose in this life.";
         }
 
         public override void Trigger(DiscordMessage message, CommandHostModule host, params string[] args)
