@@ -32,7 +32,7 @@ namespace roundsbot.Modules
 
         private async Task MessageCreated(DSharpPlus.EventArgs.MessageCreateEventArgs e)
         {
-            if (Configuration.ChannelId == 0)
+            if (Configuration.ChannelId == 0 && e.Message.MentionedUsers.Contains(DiscordClient.CurrentUser))
             {
                 Configuration.ChannelId = e.Channel.Id;
             }
