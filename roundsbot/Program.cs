@@ -26,15 +26,21 @@ namespace roundsbot
 
         private static async Task MainAsync(string[] args)
         {
+            var token = System.IO.File.ReadAllText("bottoken.txt");
+            Console.WriteLine("Using token {0}", token);
+
             _discordClient = new DiscordClient(new DiscordConfiguration()
             {
-                Token = System.IO.File.ReadAllText("bottoken.txt"),
+                Token = token,
                 TokenType = TokenType.Bot
             });
+
+            Console.WriteLine("Loading modules...");
             LoadModules();
 
-
+            Console.WriteLine("Connecting to discord...");
             await _discordClient.ConnectAsync();
+            Console.WriteLine("Connected!");
             await Task.Delay(-1);
         }
 
@@ -47,6 +53,7 @@ namespace roundsbot
 
         private static void LoadCommands(CommandHostModule hostModule)
         {
+            Console.WriteLine("   Loading commands...");
             hostModule.Commands.Add(new Commands.StartCommand());
             hostModule.Commands.Add(new Commands.EndCommand());
             hostModule.Commands.Add(new Commands.RoundLengthCommand());

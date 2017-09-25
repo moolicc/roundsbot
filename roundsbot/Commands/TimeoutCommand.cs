@@ -34,12 +34,12 @@ namespace roundsbot.Commands
                 }
                 else
                 {
-                    SendMessage(message.Channel, "Invalid value. *(Hint: A valid number might work)*");
+                    host.NotifyUsers("Invalid value. *(Hint: A valid number might work)*");
                 }
             }
             else
             {
-                SendMessage(message.Channel, $"The current round timeout is {host.Configuration.TimeoutCount} rounds.");
+                host.NotifyUsers($"The current round timeout is {host.Configuration.TimeoutCount} rounds.");
             }
         }
     }

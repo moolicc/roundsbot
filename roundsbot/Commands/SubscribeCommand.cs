@@ -27,7 +27,7 @@ namespace roundsbot.Commands
         {
             if (host.Configuration.SubscribedUsers.Contains(message.Author.Id))
             {
-                SendMessage(message.Channel, $"Excuse me sir/ma'am, but my records show that you have already subscribed. {Emojies.SUBSCRIBE}{Environment.NewLine}*(Hint: Try `unsubscribe` to unsubscribe)*");
+                host.NotifyUsers($"Excuse me sir/ma'am, but my records show that you have already subscribed. {Emojies.SUBSCRIBE}{Environment.NewLine}*(Hint: Try `unsubscribe` to unsubscribe)*");
             }
             else
             {

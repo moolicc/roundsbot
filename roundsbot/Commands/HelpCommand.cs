@@ -49,17 +49,17 @@ namespace roundsbot.Commands
                 var command = host.Commands.FirstOrDefault(c => c.GetName() == args[0]);
                 if (command == null)
                 {
-                    SendMessage(message.Channel, "This is awkward. It seems like I have **no idea** what you're asking for help with. " + Emojies.NO_MOUTH);
+                    host.NotifyUsers("This is awkward. It seems like I have **no idea** what you're asking for help with. " + Emojies.NO_MOUTH);
                     return;
                 }
                 builder.Append("**").Append(command.GetName()).Append("**");
                 builder.AppendLine();
                 builder.Append(command.GetHelpText());
-                SendMessage(message.Channel, builder.ToString());
+                host.NotifyUsers(builder.ToString());
             }
             else
             {
-                SendMessage(message.Channel, "This is awkward. I have no idea what you meant by that. " + Emojies.PENSIVE);
+                host.NotifyUsers("This is awkward. I have no idea what you meant by that. " + Emojies.PENSIVE);
             }
         }
 

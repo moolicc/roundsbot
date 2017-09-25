@@ -39,12 +39,12 @@ namespace roundsbot.Commands
                 }
                 else
                 {
-                    SendMessage(message.Channel, "Invalid value. *(Hint: A valid number might work)*");
+                    host.NotifyUsers("Invalid value. *(Hint: A valid number might work)*");
                 }
             }
             else
             {
-                SendMessage(message.Channel, $"The current round length is {host.Configuration.RoundLength} minutes.");
+                host.NotifyUsers($"The current round length is {host.Configuration.RoundLength} minutes.");
             }
         }
     }

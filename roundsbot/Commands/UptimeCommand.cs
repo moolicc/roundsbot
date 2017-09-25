@@ -36,11 +36,11 @@ namespace roundsbot.Commands
             }
             else if (args.Length != 0)
             {
-                SendMessage(message.Channel, "You over-estimate this command's abilities.");
+                host.NotifyUsers("You over-estimate this command's abilities.");
                 return;
             }
 
-            SendMessage(message.Channel, string.Format(formatString, uptime));
+            host.NotifyUsers(string.Format(formatString, uptime));
             
         }
     }

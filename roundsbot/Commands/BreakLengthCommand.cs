@@ -34,17 +34,17 @@ namespace roundsbot.Commands
 
                     if (RoundData.RunTask != null)
                     {
-                        host.NotifyUsers("Break length will reset once the next round starts.", false);
+                        host.NotifyUsers("Break length will reset once the next round starts.");
                     }
                 }
                 else
                 {
-                    SendMessage(message.Channel, "Invalid value. *(Hint: A valid number might work)*");
+                    host.NotifyUsers("Invalid value. *(Hint: A valid number might work)*");
                 }
             }
             else
             {
-                SendMessage(message.Channel, $"The current break length is {host.Configuration.BreakLength} minutes.");
+                host.NotifyUsers($"The current break length is {host.Configuration.BreakLength} minutes.");
             }
         }
     }

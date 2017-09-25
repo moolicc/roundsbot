@@ -17,10 +17,5 @@ namespace roundsbot.Commands
         {
             message.CreateReactionAsync(DiscordEmoji.FromName(host.DiscordClient, Emojies.OK));
         }
-
-        protected async void SendMessage(DiscordChannel channel, string text)
-        {
-            await channel.SendMessageAsync(text);
-        }
     }
 }

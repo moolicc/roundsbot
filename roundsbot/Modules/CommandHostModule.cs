@@ -49,7 +49,7 @@ namespace roundsbot.Modules
             {
                 return;
             }
-
+            
             string messageContent = e.Message.Content.Replace(DiscordClient.CurrentUser.Mention, "");
             var messages = new string[] { messageContent };
             if (messageContent.Contains(';'))
@@ -67,13 +67,12 @@ namespace roundsbot.Modules
         {
             if (string.IsNullOrWhiteSpace(parsed.name))
             {
-                //TODO: Output to a log with the tag: "discord_usererror".
                 return;
             }
             ExecCommand(parsed.name, message, parsed.args);
         }
 
-        public async void NotifyUsers(string message, bool mention)
+        public async void NotifyUsers(string message, bool mention = false)
         {
             if (mention)
             {
@@ -112,10 +111,16 @@ namespace roundsbot.Modules
             var command = Commands.FirstOrDefault(c => c.GetName() == commandName);
             if (command == null)
             {
-                //TODO: Output to a log with the tag: "discord_usererror".
                 return;
             }
-            command.Trigger(message, this, args);
+            try
+            {
+                command.Trigger(message, this, args);
+            }
+            catch (Exception e)
+            {
+                NotifyUsers(e.Message, false);
+            }
         }
 
         private static (string name, string[] args) ParseInput(string input)
