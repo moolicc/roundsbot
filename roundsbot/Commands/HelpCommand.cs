@@ -34,6 +34,8 @@ namespace roundsbot.Commands
             {
                 DiscordEmbedBuilder builder = new DiscordEmbedBuilder();
                 builder.Title = "Available Commands";
+                builder.Description =
+                    "Note that you can chain commands together. Separating each with a ';' (It's a semicolon. Not the greek question mark. Don't try the greek character.).";
                 lock (host)
                 {
                     foreach (var hostCommand in host.Commands)

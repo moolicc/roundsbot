@@ -10,4 +10,10 @@
     <PackageReference Include="WaterLogged" Version="1.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="timer-8x.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

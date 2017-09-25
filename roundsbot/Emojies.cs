@@ -12,6 +12,8 @@ namespace roundsbot
         public const string OK = ":ok_hand:";
         public const string PENSIVE = ":pensive:";
         public const string NO_MOUTH = ":no_mouth:";
+        public const string CAKE = ":cake:";
+        public const string FORK_KNIFE = ":fork_and_knife:";
 
         public static string[] FoodEmojies = new[]
         {

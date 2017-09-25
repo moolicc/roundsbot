@@ -56,6 +56,13 @@ namespace roundsbot.Modules
             {
                 messages = messageContent.Split(';');
             }
+            else if (messageContent.Contains(';')) //GREEK QUESTION MARK
+            {
+                NotifyUsers("You tried the greek question mark. Surely you've read the help page which clarifies "
+                    +"that the delimiter isn't a greek question mark? Well, *the help information lied.* I fully support that character." +
+                    Environment.NewLine + "I guess you *can* have your cake and eat it to. " + Emojies.CAKE + " " + Emojies.FORK_KNIFE);
+                messages = messageContent.Split(';');
+            }
             foreach (var msg in messages)
             {
                 var parsed = ParseInput(msg.Trim());
