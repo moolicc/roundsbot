@@ -35,7 +35,7 @@ namespace roundsbot.Commands
                 builder.AddField("Contributor", contributor, true);
             }
             builder.WithFooter("Icon source: https://github.com/iconic/open-iconic",
-                "");
+                "https://github.com/Icecream-Burglar/roundsbot/blob/master/roundsbot/timer-8x.png");
             SendEmbed(message.Channel, builder.Build());
         }
 
