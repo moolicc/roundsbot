@@ -35,7 +35,7 @@ namespace roundsbot.Commands
                 builder.AddField("Contributor", contributor, true);
             }
             builder.WithFooter("Icon source: https://github.com/iconic/open-iconic",
-                "https://github.com/iconic/open-iconic");
+                "");
             SendEmbed(message.Channel, builder.Build());
         }
 
