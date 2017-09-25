@@ -6,7 +6,7 @@ using roundsbot.Modules;
 
 namespace roundsbot.Commands
 {
-    class About : Command
+    class AboutCommand : Command
     {
         public override string GetName()
         {
@@ -27,8 +27,10 @@ namespace roundsbot.Commands
         {
             //Bot icon source: https://github.com/iconic/open-iconic
             DiscordEmbedBuilder builder = new DiscordEmbedBuilder();
-            builder.Title = "About";
+            builder.WithTitle("About");
+            builder.WithDescription("Version " + host.Configuration.Version);
             builder.WithTimestamp(host.Configuration.ReleaseDate);
+
             builder.AddField("Version", host.Configuration.Version.ToString(), true);
             foreach (var contributor in host.Configuration.Authors)
             {

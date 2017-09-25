@@ -38,6 +38,7 @@ namespace roundsbot
             var data = System.IO.File.ReadAllLines("about.txt");
             Version = new Version(data[0]);
             Authors = new string[data.Length - 2];
+            Array.Copy(data, 1, Authors, 0, Authors.Length);
             ReleaseDate = new DateTime(2017, 9, 25, 23, 25, 0, DateTimeKind.Utc);
         }
     }
