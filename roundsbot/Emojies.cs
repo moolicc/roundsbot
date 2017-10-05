@@ -27,6 +27,7 @@ namespace roundsbot
             ":cake:",
             ":cookie:",
             ":coffee:",
+            ":doughnut:",
         };
     }
 }

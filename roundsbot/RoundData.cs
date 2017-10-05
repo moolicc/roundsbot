@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace roundsbot
 {
-    class RoundData
+    static class RoundData
     {
         public static bool Activity { get; set; }
         public static int TimeoutTimer { get; set; }
@@ -17,8 +17,7 @@ namespace roundsbot
         public static void End()
         {
             CancelTokenSource.Cancel();
-            RunTask.Wait(5000);
-            CancelTokenSource.Token.ThrowIfCancellationRequested();
+            RunTask.Wait(6000);
             RunTask.Dispose();
             CancelTokenSource.Dispose();
 

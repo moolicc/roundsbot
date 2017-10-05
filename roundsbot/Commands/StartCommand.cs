@@ -36,6 +36,7 @@ namespace roundsbot.Commands
                 RoundData.CancelTokenSource = new CancellationTokenSource();
             }
 
+            RoundData.Activity = false;
             RoundData.RunTask = Task.Run(() =>
             {
                 RunRound(host);
@@ -49,15 +50,15 @@ namespace roundsbot.Commands
 
             var startTime = FindNextStartTime(host.Configuration);
             host.NotifyUsers($"Round {roundCounter} is starting at XX:{startTime.Minute:00}!", true);
-            Thread.Sleep(startTime.Subtract(DateTime.Now));
+            Sleep((int)startTime.Subtract(DateTime.Now).TotalMilliseconds);
 
-            while (!RoundData.CancelTokenSource.IsCancellationRequested)
+            while (RoundData.CancelTokenSource != null && !RoundData.CancelTokenSource.IsCancellationRequested)
             {
                 //Copy these values to be locally scoped for the event that
                 //somebody changes something while we're already sleeping.
 
                 var roundLength = host.Configuration.RoundLength;
-                var countdownStart = host.Configuration.CountdownStart;
+                //var countdownStart = host.Configuration.CountdownStart;
                 var breakLength = host.Configuration.BreakLength;
 
                 var endTime = startTime.AddMinutes(roundLength);
@@ -71,7 +72,10 @@ namespace roundsbot.Commands
                     }
                     await host.DiscordClient.UpdateStatusAsync(
                         new Game($"Rounds for {endTime.Subtract(startTime).Minutes} more minute(s)"));
-                    Thread.Sleep(30000);
+                    if (!Sleep(30000))
+                    {
+                        return;
+                    }
                     startTime = startTime.AddMinutes(0.5D);
                 }
                 //Thread.Sleep(endTime.Subtract(startTime).Subtract(TimeSpan.FromSeconds(countdownStart)));
@@ -94,7 +98,10 @@ namespace roundsbot.Commands
                     }
                     await host.DiscordClient.UpdateStatusAsync(
                         new Game($"Break for {breakEndTime.Subtract(startTime).Minutes} more minute(s)"));
-                    Thread.Sleep(30000);
+                    if (!Sleep(30000))
+                    {
+                        return;
+                    }
                     startTime = startTime.AddMinutes(0.5D);
                 }
 
@@ -118,13 +125,8 @@ namespace roundsbot.Commands
             }
             if (!RoundData.CancelTokenSource.IsCancellationRequested)
             {
-                RoundData.End();
+                Task.Run((Action)RoundData.End);
             }
-        }
-        
-        private static void Countdown(int time)
-        {
-
         }
 
         private static DateTime FindNextStartTime(Configuration config)
@@ -141,6 +143,37 @@ namespace roundsbot.Commands
                 }
             }
             return curTime.AddMinutes(startMinute - curTime.Minute);
+        }
+
+        private static bool Sleep(int milliseconds)
+        {
+            const int MAX_IDLETIME = 5500;
+
+            int idleTime = int.MaxValue;
+            if (milliseconds <= MAX_IDLETIME)
+            {
+                idleTime = milliseconds;
+            }
+
+            int factor = 1;
+            while (idleTime > MAX_IDLETIME)
+            {
+                factor++;
+                idleTime = milliseconds / factor;
+            }
+
+
+            int sleptTime = 0;
+            while (sleptTime < milliseconds)
+            {
+                if (RoundData.CancelTokenSource == null || RoundData.CancelTokenSource.IsCancellationRequested)
+                {
+                    return false;
+                }
+                Thread.Sleep(idleTime);
+                sleptTime += idleTime;
+            }
+            return true;
         }
     }
 }

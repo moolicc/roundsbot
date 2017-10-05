@@ -96,7 +96,7 @@ namespace roundsbot.Modules
                         {
                             messageBuilder.Append(" and");
                         }
-                        else if (i != 0 && Configuration.SubscribedUsers.Count > 1)
+                        if (i != 0 && Configuration.SubscribedUsers.Count > 1)
                         {
                             messageBuilder.Append(",");
                         }
@@ -126,7 +126,7 @@ namespace roundsbot.Modules
             }
             catch (Exception e)
             {
-                NotifyUsers(e.Message, false);
+                NotifyUsers($"{e.GetType()}: {e.Message}", false);
             }
         }
 
