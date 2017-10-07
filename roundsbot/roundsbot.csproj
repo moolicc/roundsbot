@@ -7,7 +7,6 @@
 
   <ItemGroup>
     <PackageReference Include="DSharpPlus" Version="3.1.2" />
-    <PackageReference Include="WaterLogged" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
