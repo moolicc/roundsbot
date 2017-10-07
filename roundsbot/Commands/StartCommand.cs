@@ -29,7 +29,7 @@ namespace roundsbot.Commands
         {
             if (RoundData.RunTask != null)
             {
-                //TODO: Tell the user that rounds are underway.
+                host.NotifyUsers("Rounds are already running. If you think something terrible has happened, mention @@MooCow#9699 and he'll check.");
             }
             else
             {
@@ -123,7 +123,7 @@ namespace roundsbot.Commands
                 RoundData.Activity = false;
                 roundCounter++;
             }
-            if (!RoundData.CancelTokenSource.IsCancellationRequested)
+            if (RoundData.CancelTokenSource != null && !RoundData.CancelTokenSource.IsCancellationRequested)
             {
                 Task.Run((Action)RoundData.End);
             }

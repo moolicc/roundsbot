@@ -56,6 +56,7 @@ namespace roundsbot
             Console.WriteLine("   Loading commands...");
             hostModule.Commands.Add(new Commands.StartCommand());
             hostModule.Commands.Add(new Commands.EndCommand());
+            hostModule.Commands.Add(new Commands.CommandRedirect("end", "stop"));
             hostModule.Commands.Add(new Commands.RoundLengthCommand());
             hostModule.Commands.Add(new Commands.BreakLengthCommand());
             hostModule.Commands.Add(new Commands.TimeoutCommand());
