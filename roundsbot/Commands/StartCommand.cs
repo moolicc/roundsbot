@@ -136,7 +136,7 @@ namespace roundsbot.Commands
 
             for (int i = 0; i < 60; i += config.RoundLength + config.BreakLength)
             {
-                if (curTime.Minute < i)
+                if (curTime.Minute <= i)
                 {
                     startMinute = i;
                     break;
