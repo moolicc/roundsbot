@@ -37,9 +37,9 @@ namespace roundsbot.Commands
             }
 
             RoundData.Activity = false;
-            RoundData.RunTask = Task.Run(async () =>
+            RoundData.RunTask = Task.Run(() =>
             {
-                await RunRound(host);
+                RunRound(host);
             }, RoundData.CancelTokenSource.Token);
         }
 
