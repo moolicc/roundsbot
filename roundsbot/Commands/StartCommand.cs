@@ -50,7 +50,7 @@ namespace roundsbot.Commands
 
             var startTime = FindNextStartTime(host.Configuration);
             host.NotifyUsers($"Round {roundCounter} is starting at XX:{startTime.Minute:00}!", true);
-            Sleep((int)startTime.Subtract(DateTime.Now).TotalMilliseconds);
+            Sleep((long)startTime.Subtract(DateTime.Now).TotalMilliseconds);
 
             while (RoundData.CancelTokenSource != null && !RoundData.CancelTokenSource.IsCancellationRequested)
             {
@@ -132,7 +132,7 @@ namespace roundsbot.Commands
         private static DateTime FindNextStartTime(Configuration config)
         {
             var curTime = DateTime.Now;
-            int startMinute = 0;
+            int startMinute = -1;
 
             for (int i = 0; i < 60; i += config.RoundLength + config.BreakLength)
             {
@@ -142,28 +142,35 @@ namespace roundsbot.Commands
                     break;
                 }
             }
+            if (startMinute == -1)
+            {
+                startMinute = 60;
+            }
             return curTime.AddMinutes(startMinute - curTime.Minute);
         }
 
-        private static bool Sleep(int milliseconds)
+        private static bool Sleep(long milliseconds)
         {
             const int MAX_IDLETIME = 5500;
 
             int idleTime = int.MaxValue;
             if (milliseconds <= MAX_IDLETIME)
             {
-                idleTime = milliseconds;
+                idleTime = (int)milliseconds;
             }
 
             int factor = 1;
-            while (idleTime > MAX_IDLETIME)
+            while (idleTime > MAX_IDLETIME || idleTime < 0)
             {
                 factor++;
-                idleTime = milliseconds / factor;
+                unchecked
+                {
+                    idleTime = (int)(milliseconds / factor);
+                }
             }
 
 
-            int sleptTime = 0;
+            long sleptTime = 0;
             while (sleptTime < milliseconds)
             {
                 if (RoundData.CancelTokenSource == null || RoundData.CancelTokenSource.IsCancellationRequested)
