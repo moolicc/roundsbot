@@ -29,14 +29,46 @@ namespace roundsbot.Commands
         {
             if (RoundData.RunTask != null)
             {
-                host.NotifyUsers("Rounds are already running. If you think something terrible has happened, mention @@MooCow#9699 and he'll check.");
+                host.NotifyUsers("Rounds are already running. If you think something terrible has happened, mention @MooCow#9699 and he'll check.");
             }
             else
             {
                 RoundData.CancelTokenSource = new CancellationTokenSource();
             }
 
+            if (args.Length >= 1 && args.Length <= 2)
+            {
+                if (int.TryParse(args[0], out var length))
+                {
+                    host.Configuration.RoundLength = length;
+                }
+                else
+                {
+                    host.NotifyUsers($"I can't grasp the notion of '{args[0]}' being a numerical value representing the number of minutes each round will take.");
+                    return;
+                }
+            }
+            if (args.Length == 2)
+            {
+                if (int.TryParse(args[1], out var length))
+                {
+                    host.Configuration.BreakLength = length;
+                }
+                else
+                {
+                    host.NotifyUsers($"I can't grasp the notion of '{args[1]}' being a numerical value representing the number of minutes each break will take.");
+                    return;
+                }
+            }
+            if (args.Length > 2)
+            {
+                host.NotifyUsers("I don't understand those arguments.");
+                return;
+            }
+
             RoundData.Activity = false;
+            host.NotifyUsers(
+                $"Rounds will run for {host.Configuration.RoundLength} minute(s) with {host.Configuration.BreakLength} minute breaks.");
             RoundData.RunTask = Task.Run(() =>
             {
                 RunRound(host);
@@ -116,6 +148,7 @@ namespace roundsbot.Commands
 
                 if (RoundData.TimeoutTimer >= host.Configuration.TimeoutCount)
                 {
+                    await host.DiscordClient.UpdateStatusAsync(new Game("Nothing :("));
                     host.NotifyUsers("**Ending rounds due to inactivity.**", false);
                     break;
                 }
@@ -125,6 +158,7 @@ namespace roundsbot.Commands
             }
             if (RoundData.CancelTokenSource != null && !RoundData.CancelTokenSource.IsCancellationRequested)
             {
+                await host.DiscordClient.UpdateStatusAsync(new Game("Nothing :("));
                 Task.Run((Action)RoundData.End);
             }
         }
@@ -132,6 +166,7 @@ namespace roundsbot.Commands
         private static DateTime FindNextStartTime(Configuration config)
         {
             var curTime = DateTime.Now;
+            curTime = curTime.AddSeconds(-curTime.Second);
             int startMinute = -1;
 
             for (int i = 0; i < 60; i += config.RoundLength + config.BreakLength)
