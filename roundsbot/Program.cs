@@ -35,6 +35,23 @@ namespace roundsbot
                 TokenType = TokenType.Bot
             });
 
+            _discordClient.SocketClosed += eventArgs =>
+            {
+                Console.WriteLine("Socket closed! Code {0} ('{1}')", eventArgs.CloseCode, eventArgs.CloseMessage);
+                return Task.Delay(1);
+            };
+
+            _discordClient.SocketErrored += eventArgs =>
+            {
+                Console.WriteLine("Socket error!\r\n{0}", eventArgs.Exception);
+                return Task.Delay(1);
+            };
+
+            _discordClient.SocketOpened += () =>
+            {
+                Console.WriteLine("Socket opened.");
+                return Task.Delay(1);
+            };
             Console.WriteLine("Loading modules...");
             LoadModules();
 
