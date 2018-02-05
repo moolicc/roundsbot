@@ -103,7 +103,7 @@ namespace roundsbot.Commands
                         break;
                     }
                     await host.DiscordClient.UpdateStatusAsync(
-                        new Game($"Rounds for {endTime.Subtract(startTime).Minutes} more minute(s)"));
+                        new DiscordGame($"Rounds for {endTime.Subtract(startTime).Minutes} more minute(s)"));
                     if (!Sleep(30000))
                     {
                         return;
@@ -129,7 +129,7 @@ namespace roundsbot.Commands
                         break;
                     }
                     await host.DiscordClient.UpdateStatusAsync(
-                        new Game($"Break for {breakEndTime.Subtract(startTime).Minutes} more minute(s)"));
+                        new DiscordGame($"Break for {breakEndTime.Subtract(startTime).Minutes} more minute(s)"));
                     if (!Sleep(30000))
                     {
                         return;
@@ -148,7 +148,7 @@ namespace roundsbot.Commands
 
                 if (RoundData.TimeoutTimer >= host.Configuration.TimeoutCount)
                 {
-                    await host.DiscordClient.UpdateStatusAsync(new Game("Nothing :("));
+                    await host.DiscordClient.UpdateStatusAsync(new DiscordGame("Nothing :("));
                     host.NotifyUsers("**Ending rounds due to inactivity.**", false);
                     break;
                 }
@@ -158,7 +158,7 @@ namespace roundsbot.Commands
             }
             if (RoundData.CancelTokenSource != null && !RoundData.CancelTokenSource.IsCancellationRequested)
             {
-                await host.DiscordClient.UpdateStatusAsync(new Game("Nothing :("));
+                await host.DiscordClient.UpdateStatusAsync(new DiscordGame("Nothing :("));
                 Task.Run((Action)RoundData.End);
             }
         }

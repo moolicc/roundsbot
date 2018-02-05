@@ -16,6 +16,10 @@ namespace roundsbot
 
         public static void End()
         {
+            if (CancelTokenSource == null)
+            {
+                return;
+            }
             CancelTokenSource.Cancel();
             RunTask.Wait(6000);
             RunTask.Dispose();
