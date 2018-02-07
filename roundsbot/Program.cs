@@ -132,9 +132,8 @@ namespace roundsbot
                 System.Threading.Thread.Sleep(10000);
                 while (socketOpen)
                 {
-                    //Sleep for 5 minutes.
-                    //System.Threading.Thread.Sleep(300000);
-                    System.Threading.Thread.Sleep(1000);
+                    //Sleep for 2 minutes.
+                    System.Threading.Thread.Sleep(120000);
                 }
 
                 //TODO: Save state
