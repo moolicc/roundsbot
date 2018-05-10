@@ -13,7 +13,7 @@ namespace roundsbot
 {
     class Discord
     {
-        public Dictionary<string, Commands.CommandBase> Commands { get; private set; }
+        public Dictionary<string, CommandBase> Commands { get; private set; }
         public DiscordClient DiscordClient { get; private set; }
         public Configuration DiscordConfig { get; private set; }
 
@@ -22,6 +22,11 @@ namespace roundsbot
         public Discord()
         {
             Commands = new Dictionary<string, CommandBase>();
+        }
+
+        public void AddCommand(CommandBase command)
+        {
+            Commands.Add(command.Name, command);
         }
 
         public async void Connect(Configuration config)
