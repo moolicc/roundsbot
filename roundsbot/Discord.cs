@@ -73,6 +73,16 @@ namespace roundsbot
 
             return Task.CompletedTask;
         }
+        
+        public void SendInvalidCommand(CommandBase command)
+        {
+            SendMessage($"{command.Name}: **Invalid Command Usage!**{Environment.NewLine}`{command.Usage}`");
+        }
+        
+        public void SendCommandMessage(CommandBase command, string message)
+        {
+            SendMessage($"**{command.Name}**:{Environment.NewLine}{message}");
+        }
 
         public void SendMessage(string text)
         {
