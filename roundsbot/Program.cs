@@ -10,8 +10,6 @@ namespace roundsbot
 {
     class Program
     {
-        private static Configuration _config;
-
         static void Main(string[] args)
         {
         }
