@@ -84,6 +84,15 @@ namespace roundsbot
             SendMessage($"**{command.Name}**:{Environment.NewLine}{message}");
         }
 
+        public void SendMessage(DiscordEmbed discordEmbed)
+        {
+            if (_channel == null)
+            {
+                return;
+            }
+            _channel.SendMessageAsync(embed: discordEmbed);
+        }
+
         public void SendMessage(string text)
         {
             if (_channel == null)
