@@ -11,6 +11,9 @@ namespace roundsbot
 {
     class Program
     {
+        private static Discord _discord;
+        private static bool _exiting;
+
         static void Main(string[] args)
         {
             if (!File.Exists("conf.json"))
@@ -24,16 +27,41 @@ namespace roundsbot
             }
 
             var config = JsonConvert.DeserializeObject<Configuration>(File.ReadAllText("conf.json"));
-            var discord = new Discord();
-            discord.Connect(config);
+            _discord = new Discord();
+            _discord.Connect(config);
 
-            //TODO: Create REPL (and a command to save the config)
-            while (Console.ReadLine() != "exit")
+            Repl();
+        }
+
+        private static void Repl()
+        {
+            _exiting = false;
+            while (!_exiting)
             {
-                
+                var input = Console.ReadLine().Trim().ToLower();
+                string[] split = null;
+                if (input.Contains(' '))
+                {
+                    split = input.Split(' ');
+                }
+                else
+                {
+                    split = new string[1] { input };
+                }
+                Evaluate(split);
             }
-            
-            File.WriteAllText("conf.json", JsonConvert.SerializeObject(discord.DiscordConfig));
+        }
+        
+        private static void Evaluate(string[] input)
+        {
+            if (input[0] == "exit")
+            {
+                _exiting = true;
+            }
+            else if (input[0] == "save")
+            {
+                File.WriteAllText("conf.json", JsonConvert.SerializeObject(_discord.DiscordConfig));
+            }
         }
     }
 }
