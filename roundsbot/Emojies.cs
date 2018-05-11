@@ -4,7 +4,7 @@ using System.Text;
 
 namespace roundsbot
 {
-    class Emojies
+    static class Emojies
     {
         public const string TIMER = ":stopwatch:";
         public const string SUBSCRIBE = ":notepad_spiral:";
@@ -29,5 +29,16 @@ namespace roundsbot
             ":coffee:",
             ":doughnut:",
         };
+
+        private static Random _random;
+
+        public static string GetRandomFoodEmojie()
+        {
+            if (_random == null)
+            {
+                _random = new Random();
+            }
+            return FoodEmojies[_random.Next(FoodEmojies.Length)];
+        }
     }
 }

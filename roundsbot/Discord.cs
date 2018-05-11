@@ -71,6 +71,7 @@ namespace roundsbot
                 return Task.CompletedTask;
             }
 
+            RoundService.Instance.Activity = true;
             _lastMessage = e.Message;
             HandleCommand(e.Message.Content.Replace(DiscordClient.CurrentUser.Mention, ""));
 

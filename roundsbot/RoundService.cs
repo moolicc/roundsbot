@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
+using DSharpPlus.Entities;
 
 namespace roundsbot
 {
@@ -10,22 +12,110 @@ namespace roundsbot
         public static RoundService Instance { get; private set; }
 
         public Discord Discord { get; private set; }
+        public bool IsRunning => _roundTask != null && (!_roundTask.IsCompleted || !_roundTask.IsCanceled);
+        public bool Activity { get; set; }
 
+        private Task _roundTask;
         private CancellationTokenSource _cancelSource;
+        private int _timeoutCounter;
 
         public RoundService(Discord discord)
         {
             Instance = this;
             Discord = discord;
         }
-        
-        private DateTime FindNextStartTime()
+
+        public void StartRounds()
+        {
+            if (IsRunning)
+            {
+                Discord.SendMessage("Rounds are already underway.");
+                return;
+            }
+
+            _cancelSource = new CancellationTokenSource();
+            _roundTask = Task.Factory.StartNew(Run, _cancelSource.Token);
+        }
+
+        public void StopRounds()
+        {
+            if (!IsRunning)
+            {
+                Discord.SendMessage("Rounds are not running right now.");
+                return;
+            }
+
+            _cancelSource.Cancel();
+            _roundTask.Wait(60000);
+            _roundTask.Dispose();
+            _cancelSource.Dispose();
+
+            Activity = false;
+            _timeoutCounter = 0;
+        }
+
+        private void Run()
+        {
+            int roundCounter = 1;
+            var startTime = FindNextStartTime(Discord.DiscordConfig.RoundLength, Discord.DiscordConfig.BreakLength);
+            Discord.SendMessage($"Round {roundCounter} is starting at XX:{startTime.Minute:00}!");
+            Sleep((long)startTime.Subtract(DateTime.Now).TotalMilliseconds);
+
+            while (!_cancelSource.IsCancellationRequested)
+            {
+                var roundLength = Discord.DiscordConfig.RoundLength;
+                var breakLength = Discord.DiscordConfig.BreakLength;
+                var endTime = startTime.AddMinutes(roundLength);
+
+                Discord.SendMessage($"Round {roundCounter} is starting! {Emojies.TIMER}" +
+                                    $"{Environment.NewLine}*Break at XX:{endTime.Minute:00}.*");
+
+                if (!SleepAndStatus(ref startTime, endTime, "Rounds for {0} more minute(s)"))
+                {
+                    break;
+                }
+
+
+                var breakEndTime = endTime.AddMinutes(breakLength);
+                var foodEmojie = Emojies.GetRandomFoodEmojie();
+                Discord.SendMessage($"{foodEmojie} Round over! Break until **XX:{breakEndTime.Minute:00}**! {foodEmojie}");
+
+                if (!SleepAndStatus(ref startTime, breakEndTime, "Break for {0} more minute(s)"))
+                {
+                    break;
+                }
+
+                if (Activity)
+                {
+                    _timeoutCounter = 0;
+                }
+                else
+                {
+                    _timeoutCounter++;
+                }
+
+                if (_timeoutCounter >= Discord.DiscordConfig.TimeoutCount)
+                {
+                    Discord.SendMessage("**Ending rounds due to inactivity.**");
+                    
+                    break;
+                }
+
+                Activity = false;
+                roundCounter++;
+            }
+            
+            Discord.SetStatus("Nothing");
+            _cancelSource.Cancel();
+        }
+
+        private DateTime FindNextStartTime(int roundLength, int breakLength)
         {
             var curTime = DateTime.Now;
             curTime = curTime.AddSeconds(-curTime.Second);
             int startMinute = -1;
 
-            for (int i = 0; i < 60; i += Discord.DiscordConfig.RoundLength + Discord.DiscordConfig.BreakLength)
+            for (int i = 0; i < 60; i += roundLength + breakLength)
             {
                 if (curTime.Minute <= i)
                 {
@@ -38,6 +128,27 @@ namespace roundsbot
                 startMinute = 60;
             }
             return curTime.AddMinutes(startMinute - curTime.Minute);
+        }
+
+        private bool SleepAndStatus(ref DateTime start, DateTime end, string format)
+        {
+            while (true)
+            {
+                if (start.Hour == end.Hour && start.Minute >= end.Minute)
+                {
+                    break;
+                }
+
+                Discord.SetStatus(string.Format(format, end.Subtract(start).Minutes));
+                
+                if (!Sleep(30000))
+                {
+                    return false;
+                }
+                start = start.AddMinutes(0.5D);
+            }
+
+            return true;
         }
 
         //We must implement a sleep function that short-circuits when a cancel is requested.
