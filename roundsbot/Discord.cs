@@ -77,6 +77,11 @@ namespace roundsbot
             return Task.CompletedTask;
         }
 
+        public void SetStatus(string status)
+        {
+            DiscordClient.UpdateStatusAsync(new DiscordGame(status));
+        }
+
         public void AddReaction(string reaction)
         {
             _lastMessage.CreateReactionAsync(DiscordEmoji.FromName(DiscordClient, reaction));
