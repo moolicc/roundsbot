@@ -30,6 +30,16 @@ namespace roundsbot
             _discord = new Discord();
             _discord.Connect(config);
 
+            var roundService = new RoundService(_discord);
+
+            _discord.AddCommand(new Commands.UptimeCommand());
+            _discord.AddCommand(new Commands.BreakLengthCommand());
+            _discord.AddCommand(new Commands.HelpCommand());
+            _discord.AddCommand(new Commands.RoundLengthCommand());
+            _discord.AddCommand(new Commands.StartCommand());
+            _discord.AddCommand(new Commands.StopCommand());
+            _discord.AddCommand(new Commands.TimeoutCommand());
+
             Repl();
         }
 
