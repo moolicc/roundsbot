@@ -18,6 +18,8 @@ namespace roundsbot
         public Configuration DiscordConfig { get; private set; }
 
         private DiscordChannel _channel;
+        private DiscordMessage _lastMessage;
+
 
         public Discord()
         {
@@ -69,11 +71,17 @@ namespace roundsbot
                 return Task.CompletedTask;
             }
 
+            _lastMessage = e.Message;
             HandleCommand(e.Message.Content.Replace(DiscordClient.CurrentUser.Mention, ""));
 
             return Task.CompletedTask;
         }
-        
+
+        public void AddReaction(string reaction)
+        {
+            _lastMessage.CreateReactionAsync(DiscordEmoji.FromName(DiscordClient, reaction));
+        }
+
         public void SendInvalidCommand(CommandBase command)
         {
             SendMessage($"{command.Name}: **Invalid Command Usage!**{Environment.NewLine}`{command.Usage}`");
