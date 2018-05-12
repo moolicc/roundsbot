@@ -60,11 +60,11 @@ namespace roundsbot
             var startTime = FindNextStartTime(Discord.DiscordConfig.RoundLength, Discord.DiscordConfig.BreakLength);
             Discord.SendMessage($"Round {roundCounter} is starting at XX:{startTime.Minute:00}!");
             Sleep((long)startTime.Subtract(DateTime.Now).TotalMilliseconds);
-
+            
+            var roundLength = Discord.DiscordConfig.RoundLength;
+            var breakLength = Discord.DiscordConfig.BreakLength;
             while (!_cancelSource.IsCancellationRequested)
             {
-                var roundLength = Discord.DiscordConfig.RoundLength;
-                var breakLength = Discord.DiscordConfig.BreakLength;
                 var endTime = startTime.AddMinutes(roundLength);
 
                 Discord.SendMessage($"Round {roundCounter} is starting! {Emojies.TIMER}" +

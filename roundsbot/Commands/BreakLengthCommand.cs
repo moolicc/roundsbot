@@ -27,6 +27,11 @@ namespace roundsbot.Commands
 
             discord.DiscordConfig.BreakLength = value;
             discord.AddReaction(Emojies.OK);
+
+            if (RoundService.Instance.IsRunning)
+            {
+                discord.SendCommandMessage(this, "Rounds must be restarted for that change to apply.");
+            }
         }
     }
 }
