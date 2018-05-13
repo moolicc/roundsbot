@@ -97,7 +97,6 @@ namespace roundsbot
                 if (_timeoutCounter >= Discord.DiscordConfig.TimeoutCount)
                 {
                     Discord.SendMessage("**Ending rounds due to inactivity.**");
-                    
                     break;
                 }
 

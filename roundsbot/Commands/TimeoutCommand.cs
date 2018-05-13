@@ -14,7 +14,12 @@ namespace roundsbot.Commands
 
         public override void Execute(Discord discord, params string[] args)
         {
-            if (args.Length != 1)
+            if (args.Length == 0)
+            {
+                discord.SendMessage($"The bot will end rounds after {discord.DiscordConfig.TimeoutCount} rounds of inactivity.");
+                return;
+            }
+            else if (args.Length != 1)
             {
                 discord.SendInvalidCommand(this);
                 return;

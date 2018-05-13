@@ -13,7 +13,12 @@ namespace roundsbot.Commands
 
         public override void Execute(Discord discord, params string[] args)
         {
-            if (args.Length != 1)
+            if (args.Length == 0)
+            {
+                discord.SendMessage($"Breaks will last for {discord.DiscordConfig.BreakLength} minutes.");
+                return;
+            }
+            else if (args.Length != 1)
             {
                 discord.SendInvalidCommand(this);
                 return;

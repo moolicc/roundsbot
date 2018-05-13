@@ -90,7 +90,7 @@ namespace roundsbot
 
         public void SendInvalidCommand(CommandBase command)
         {
-            SendMessage($"{command.Name}: **Invalid Command Usage!**{Environment.NewLine}`{command.Usage}`");
+            SendMessage($"**{command.Name}**: *Invalid Command Usage!*{Environment.NewLine}`{command.Usage}`");
         }
         
         public void SendCommandMessage(CommandBase command, string message)
