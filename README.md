@@ -1,31 +1,39 @@
 # Roundsbot README #
 
 ## Introduction ##
-explain what roundsbot is and does here (I don't fully know myself, but I want to add games to it later)
-(unles you want me to make a seperate bot for that)
+Roundsbot is a very, very specific discord bot for [RBWhitaker's](http://rbwhitaker.wikidot.com/) discord.
 
-## Getting Started ##
-put how to get everything running here
+
 
 ### Prerequisites ###
-required things go here (what you need to do and have to get before installing)
+.net Core 2.0 is required for running the bot.
 
-### Installing ###
-how to actually install the bot and get it working
+## Getting Started ##
+`dotnet run` in the project's directory and it will run.
+The first run will create a conf.json.
+You must enter the bot's token in the 'token' entry in this config file.
+
+Once you've got the bot running, the first channel you send a command in
+will forever be the only channel the bot listens to. This is stored in the conf.json.
 
 ## Commands ##
-#### @roundsbot start (parameter 1) (parameter 2) ####
+#### @roundsbot help ####
+Will print out all the commands.
+
+#### @roundsbot start ####
+Starts running rounds.
 
 #### @roundsbot stop ####
-
-#### @roundsbot help ####
+Starts running rounds.
 
 #### @roundsbot uptime ####
+Displays the length of time the bot has been online.
 
 ## Contributing ##
-how to contribute goes here
+Make your changed, submit a pull request.
 
 ## Authors ##
-moocow name goes here
+IcecreamBurglar (Discord: MooCow #9699)
+
 Meet the contributers at https://github.com/Icecream-Burglar/roundsbot/contributors
 
