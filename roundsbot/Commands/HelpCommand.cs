@@ -20,11 +20,14 @@ namespace roundsbot.Commands
             {
                 DiscordEmbedBuilder builder = new DiscordEmbedBuilder();
                 builder.Title = "Available Commands";
+                builder.Description = "Note: Chain commands together with a semicolon.";
 
                 foreach (var hostCommand in discord.Commands)
                 {
                     builder.AddField(hostCommand.Value.Usage, hostCommand.Value.Description);
                 }
+                
+                builder.WithFooter("RoundsBot by MooCow • Version: 1.1.0.0 • September 4, 2018");
                 discord.SendMessage(builder.Build());
             }
             else if (parameters.Length == 1)

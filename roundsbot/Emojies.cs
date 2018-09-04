@@ -15,6 +15,10 @@ namespace roundsbot
         public const string CAKE = ":cake:";
         public const string FORK_KNIFE = ":fork_and_knife:";
 
+        public const string SUB = ":bell:";
+        public const string UNSUB = ":no_bell:";
+        public const string ATTENTION = ":warning:";
+
         public static string[] FoodEmojies = new[]
         {
             ":green_apple:",

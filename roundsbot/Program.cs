@@ -32,6 +32,7 @@ namespace roundsbot
 
             //Instantiate this so that the static 'Instance' field is set.
             var roundService = new RoundService(_discord);
+            var subService = new SubService(_discord);
 
             _discord.AddCommand(new Commands.UptimeCommand());
             _discord.AddCommand(new Commands.BreakLengthCommand());

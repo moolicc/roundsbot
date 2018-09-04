@@ -18,6 +18,7 @@ namespace roundsbot
         private Task _roundTask;
         private CancellationTokenSource _cancelSource;
         private int _timeoutCounter;
+        
 
         public RoundService(Discord discord)
         {
@@ -32,7 +33,7 @@ namespace roundsbot
                 Discord.SendMessage("Rounds are already underway.");
                 return;
             }
-
+            
             _cancelSource = new CancellationTokenSource();
             _roundTask = Task.Factory.StartNew(Run, _cancelSource.Token);
         }
@@ -58,7 +59,10 @@ namespace roundsbot
         {
             int roundCounter = 1;
             var startTime = FindNextStartTime(Discord.DiscordConfig.RoundLength, Discord.DiscordConfig.BreakLength);
+
             Discord.SendMessage($"Round {roundCounter} is starting at XX:{startTime.Minute:00}!");
+            SubService.AddReactions(Discord);
+
             Sleep((long)startTime.Subtract(DateTime.Now).TotalMilliseconds);
             
             var roundLength = Discord.DiscordConfig.RoundLength;
@@ -67,8 +71,10 @@ namespace roundsbot
             {
                 var endTime = startTime.AddMinutes(roundLength);
 
+                SubService.Instance.SendMessage("{0} Attention: *{1}* {0}");
                 Discord.SendMessage($"Round {roundCounter} is starting! {Emojies.TIMER}" +
                                     $"{Environment.NewLine}*Break at XX:{endTime.Minute:00}.*");
+                SubService.AddReactions(Discord);
 
                 if (!SleepAndStatus(ref startTime, endTime, "Rounds for {0} more minute(s)"))
                 {
@@ -78,7 +84,10 @@ namespace roundsbot
 
                 var breakEndTime = endTime.AddMinutes(breakLength);
                 var foodEmojie = Emojies.GetRandomFoodEmojie();
+
+                SubService.Instance.SendMessage("{0} Attention: *{1}* {0}");
                 Discord.SendMessage($"{foodEmojie} Round over! Break until **XX:{breakEndTime.Minute:00}**! {foodEmojie}");
+                SubService.AddReactions(Discord);
 
                 if (!SleepAndStatus(ref startTime, breakEndTime, "Break for {0} more minute(s)"))
                 {
@@ -96,6 +105,7 @@ namespace roundsbot
 
                 if (_timeoutCounter >= Discord.DiscordConfig.TimeoutCount)
                 {
+                    SubService.Instance.SendMessage("{0} Attention: *{1}* {0}");
                     Discord.SendMessage("**Ending rounds due to inactivity.**");
                     break;
                 }

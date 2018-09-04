@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using DSharpPlus;
@@ -17,7 +18,11 @@ namespace roundsbot
         public DiscordClient DiscordClient { get; private set; }
         public Configuration DiscordConfig { get; private set; }
 
+        public event Action<MessageReactionAddEventArgs> OnReactionAdded;
+        public event Action<MessageReactionRemoveEventArgs> OnReactionRemoved;
+
         private DiscordChannel _channel;
+        private DiscordMessage _lastBotMessage;
         private DiscordMessage _lastMessage;
 
 
@@ -46,6 +51,8 @@ namespace roundsbot
             DiscordClient = new DiscordClient(discordConfig);
             DiscordClient.SetWebSocketClient<WebSocket4NetCoreClient>();
             DiscordClient.MessageCreated += MessageCreated;
+            DiscordClient.MessageReactionAdded += ReactionAdded;
+            DiscordClient.MessageReactionRemoved += ReactionRemoved;
 
             await DiscordClient.ConnectAsync();
 
@@ -55,8 +62,40 @@ namespace roundsbot
             }
         }
 
+        private Task ReactionAdded(MessageReactionAddEventArgs e)
+        {
+            if (e.User.IsCurrent)
+            {
+                return Task.CompletedTask;
+            }
+
+            if (e.Message.Id == _lastBotMessage.Id)
+            {
+                OnReactionAdded?.Invoke(e);
+            }
+            return Task.CompletedTask;
+        }
+
+        private Task ReactionRemoved(MessageReactionRemoveEventArgs e)
+        {
+            if (e.User.IsCurrent)
+            {
+                return Task.CompletedTask;
+            }
+            if (e.Message.Id == _lastBotMessage.Id)
+            {
+                OnReactionRemoved?.Invoke(e);
+            }
+            return Task.CompletedTask;
+        }
+
         private Task MessageCreated(MessageCreateEventArgs e)
         {
+            if (e.Author.IsCurrent)
+            {
+                _lastBotMessage = e.Message;
+                return Task.CompletedTask;
+            }
             if(e.MentionedUsers.All(d => d.Id != DiscordClient.CurrentUser.Id))
             {
                 return Task.CompletedTask;
@@ -85,7 +124,12 @@ namespace roundsbot
 
         public void AddReaction(string reaction)
         {
-            _lastMessage.CreateReactionAsync(DiscordEmoji.FromName(DiscordClient, reaction));
+            _lastMessage.CreateReactionAsync(DiscordEmoji.FromName(DiscordClient, reaction)).Wait();
+        }
+
+        public void AddBotReaction(string reaction)
+        {
+            _lastBotMessage.CreateReactionAsync(DiscordEmoji.FromName(DiscordClient, reaction)).Wait();
         }
 
         public void SendInvalidCommand(CommandBase command)
@@ -104,7 +148,7 @@ namespace roundsbot
             {
                 return;
             }
-            _channel.SendMessageAsync(embed: discordEmbed);
+            _channel.SendMessageAsync(embed: discordEmbed).Wait();
         }
 
         public void SendMessage(string text)
@@ -113,7 +157,7 @@ namespace roundsbot
             {
                 return;
             }
-            DiscordClient.SendMessageAsync(_channel, text);
+            DiscordClient.SendMessageAsync(_channel, text).Wait();
         }
 
         private void HandleCommand(string text)
