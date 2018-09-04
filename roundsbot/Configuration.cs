@@ -14,6 +14,8 @@ namespace roundsbot
         public int BreakLength { get; set; }
         public int TimeoutCount { get; set; }
 
+        public string VersionString { get; set; }
+
         public Configuration()
         {
             Token = "";
@@ -22,6 +24,8 @@ namespace roundsbot
             RoundLength = 25;
             BreakLength = 5;
             TimeoutCount = 5;
+
+            VersionString = "Roundsbot by MooCow • Version 1.1.0.1 • September 4, 2018";
         }
     }
 }

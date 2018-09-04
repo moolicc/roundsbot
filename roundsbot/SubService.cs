@@ -18,13 +18,24 @@ namespace roundsbot
             discord.AddBotReaction(Emojies.UNSUB);
         }
 
-        public SubService(Discord discord)
+        public SubService()
         {
             Instance = this;
             _users = new List<DiscordUser>();
+        }
+
+        public void Init(Discord discord)
+        {
             Discord = discord;
-            discord.OnReactionAdded += ReactionAdded;
-            discord.OnReactionRemoved += ReactionRemoved;
+            Discord.OnReactionAdded += ReactionAdded;
+            Discord.OnReactionRemoved += ReactionRemoved;
+        }
+
+        public void Close()
+        {
+            _users.Clear();
+            Discord.OnReactionAdded -= ReactionAdded;
+            Discord.OnReactionRemoved -= ReactionRemoved;
         }
 
         //Format:

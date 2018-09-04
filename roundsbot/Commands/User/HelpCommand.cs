@@ -25,7 +25,7 @@ namespace roundsbot.Commands.User
                     builder.AddField(hostCommand.Value.Usage, hostCommand.Value.Description);
                 }
                 
-                builder.WithFooter("RoundsBot by MooCow • Version: 1.1.0.0 • September 4, 2018");
+                builder.WithFooter(discord.DiscordConfig.VersionString);
                 discord.SendMessage(builder.Build());
             }
             else if (parameters.Length == 1)

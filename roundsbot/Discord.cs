@@ -62,6 +62,17 @@ namespace roundsbot
             }
         }
 
+        public async void Close()
+        {
+            await DiscordClient.DisconnectAsync();
+        }
+
+        public async void SetConfig(Configuration config)
+        {
+            _channel = await DiscordClient.GetChannelAsync(DiscordConfig.ChannelId);
+        }
+
+
         private Task ReactionAdded(MessageReactionAddEventArgs e)
         {
             if (e.User.IsCurrent)

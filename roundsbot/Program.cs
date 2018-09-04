@@ -34,7 +34,8 @@ namespace roundsbot
 
             //Instantiate this so that the static 'Instance' field is set.
             var roundService = new RoundService(_discord);
-            var subService = new SubService(_discord);
+            var subService = new SubService();
+            subService.Init(_discord);
 
             _discord.AddCommand(new UptimeCommand());
             _discord.AddCommand(new BreakLengthCommand());
@@ -107,13 +108,57 @@ namespace roundsbot
             {
                 _exiting = true;
             }
-            else if (input[0] == "save")
+            else if (input[0] == "saveconf")
             {
                 File.WriteAllText("conf.json", JsonConvert.SerializeObject(_discord.DiscordConfig));
+            }
+            else if (input[0] == "loadconf")
+            {
+                if (RoundService.Instance != null && RoundService.Instance.IsRunning)
+                {
+                    _discord.SendMessage("Ending rounds to reload bot configuration...");
+                    RoundService.Instance.StopRounds();
+                }
+                SubService.Instance.Close(); 
+                var configContents = File.ReadAllText("conf.json");
+                var config = JsonConvert.DeserializeObject<Configuration>(configContents);
+                _discord.SetConfig(config);
+                SubService.Instance.Init(_discord);
+            }
+            else if (input[0] == "close")
+            {
+                _discord.SendMessage("Host is forcing closure of the bot.");
+                if (RoundService.Instance != null && RoundService.Instance.IsRunning)
+                {
+                    RoundService.Instance.StopRounds();
+                }
+                SubService.Instance.Close();
+                _discord.Close();
+                var configContents = File.ReadAllText("conf.json");
+                var config = JsonConvert.DeserializeObject<Configuration>(configContents);
+                _discord.SetConfig(config);
+                SubService.Instance.Init(_discord);
+            }
+            else if (input[0] == "open")
+            {
+                var discordConfigContents = File.ReadAllText("conf.json");
+                var discordConfig = JsonConvert.DeserializeObject<Configuration>(discordConfigContents);
+
+                _discord = new Discord();
+                _discord.SetConfig(discordConfig);
+                _discord.Connect(discordConfig);
+
+                var rounds = new RoundService(_discord);
+                var sub = new SubService();
+                SubService.Instance.Init(_discord);
             }
             else if (input[0] == "cmd")
             {
                 EvaluateDiscordCommand(input);
+            }
+            else if (input[0] == "msg")
+            {
+                _discord.SendMessage(input[1]);
             }
         }
 
