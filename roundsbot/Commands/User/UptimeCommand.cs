@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
 
-namespace roundsbot.Commands
+namespace roundsbot.Commands.User
 {
-    class UptimeCommand : CommandBase
+    class UptimeCommand : UserCommand
     {
         public override string Name => "uptime";
         public override string Usage => "uptime";

@@ -53,6 +53,8 @@ namespace roundsbot
 
             Activity = false;
             _timeoutCounter = 0;
+
+            Discord.SendMessage("Rounds have been stopped.");
         }
 
         private void Run()

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace roundsbot.Commands
+﻿namespace roundsbot.Commands.User
 {
-    class StopCommand : CommandBase
+    class StopCommand : UserCommand
     {
         public override string Name => "stop";
         public override string Usage => "stop";

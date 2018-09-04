@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 using DSharpPlus.Entities;
 
-namespace roundsbot.Commands
+namespace roundsbot.Commands.User
 {
-    class HelpCommand : CommandBase
+    class HelpCommand : UserCommand
     {
         public override string Name => "help";
         public override string Usage => "help [command]";

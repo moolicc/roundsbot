@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace roundsbot.Commands
+﻿namespace roundsbot.Commands.User
 {
-    class BreakLengthCommand : CommandBase
+    class BreakLengthCommand : UserCommand
     {
         public override string Name => "breaklength";
         public override string Usage => "breaklength <value>";

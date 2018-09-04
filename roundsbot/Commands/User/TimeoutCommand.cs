@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace roundsbot.Commands
+﻿namespace roundsbot.Commands.User
 {
-    class TimeoutCommand : CommandBase
+    class TimeoutCommand : UserCommand
     {
         public override string Name => "timeout";
         public override string Usage => "timeout <value>";

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace roundsbot.Commands
+﻿namespace roundsbot.Commands.User
 {
-    class StartCommand : CommandBase
+    class StartCommand : UserCommand
     {
         public override string Name => "start";
         public override string Usage => "start";

@@ -71,6 +71,7 @@ namespace roundsbot
 
             if (e.Message.Id == _lastBotMessage.Id)
             {
+                Console.WriteLine("[{0}] {1} added reaction {2}", e.User.Id, e.User.Username, e.Emoji.GetDiscordName());
                 OnReactionAdded?.Invoke(e);
             }
             return Task.CompletedTask;
@@ -84,6 +85,7 @@ namespace roundsbot
             }
             if (e.Message.Id == _lastBotMessage.Id)
             {
+                Console.WriteLine("[{0}] {1} removed reaction {2}", e.User.Id, e.User.Username, e.Emoji.GetDiscordName());
                 OnReactionRemoved?.Invoke(e);
             }
             return Task.CompletedTask;
@@ -112,7 +114,11 @@ namespace roundsbot
 
             RoundService.Instance.Activity = true;
             _lastMessage = e.Message;
-            HandleCommand(e.Message.Content.Replace(DiscordClient.CurrentUser.Mention, ""));
+
+            var commandWithoutMention = e.Message.Content.Replace(DiscordClient.CurrentUser.Mention, "");
+            Console.WriteLine("[{0}] {1}: {2}", e.Author.Id, e.Author.Username, commandWithoutMention);
+            var commands = commandWithoutMention.Split(';', StringSplitOptions.RemoveEmptyEntries);
+            HandleCommand(commands);
 
             return Task.CompletedTask;
         }
@@ -157,18 +163,27 @@ namespace roundsbot
             {
                 return;
             }
+            Console.WriteLine("Roundsbot: {0}", text);
             DiscordClient.SendMessageAsync(_channel, text).Wait();
         }
 
-        private void HandleCommand(string text)
+        public void PumpCommand(string command)
         {
-            var parsed = ParseCommand(text);
+            var parsed = ParseCommand(command);
             if (!Commands.ContainsKey(parsed.name))
             {
                 SendMessage($"Unknown command *{parsed.name}*");
                 return;
             }
             Commands[parsed.name].Execute(this, parsed.args);
+        }
+
+        private void HandleCommand(string[] commandTexts)
+        {
+            foreach (var text in commandTexts)
+            {
+                PumpCommand(text.Trim());
+            }
         }
         
         private (string name, string[] args) ParseCommand(string text)

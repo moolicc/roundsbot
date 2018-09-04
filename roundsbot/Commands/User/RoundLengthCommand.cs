@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace roundsbot.Commands
+﻿namespace roundsbot.Commands.User
 {
-    class RoundLengthCommand : CommandBase
+    class RoundLengthCommand : UserCommand
     {
         public override string Name => "roundlength";
         public override string Usage => "roundlength <value>";
