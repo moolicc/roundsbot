@@ -51,6 +51,9 @@ namespace roundsbot
             _roundTask.Dispose();
             _cancelSource.Dispose();
 
+            _roundTask = null;
+            _cancelSource = null;
+
             Activity = false;
             _timeoutCounter = 0;
 
