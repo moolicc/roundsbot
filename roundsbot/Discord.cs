@@ -17,11 +17,12 @@ namespace roundsbot
         public Dictionary<string, CommandBase> Commands { get; private set; }
         public DiscordClient DiscordClient { get; private set; }
         public Configuration DiscordConfig { get; private set; }
+        public DiscordChannel Channel { get; private set; }
+        public DateTime StartTime { get; private set; }
 
         public event Action<MessageReactionAddEventArgs> OnReactionAdded;
         public event Action<MessageReactionRemoveEventArgs> OnReactionRemoved;
 
-        private DiscordChannel _channel;
         private DiscordMessage _lastBotMessage;
         private DiscordMessage _lastMessage;
 
@@ -58,8 +59,10 @@ namespace roundsbot
 
             if (DiscordConfig.ChannelId != 0)
             {
-                _channel = await DiscordClient.GetChannelAsync(DiscordConfig.ChannelId);
+                Channel = await DiscordClient.GetChannelAsync(DiscordConfig.ChannelId);
             }
+
+            StartTime = DateTime.Now;
         }
 
         public async void Close()
@@ -69,7 +72,7 @@ namespace roundsbot
 
         public async void SetConfig(Configuration config)
         {
-            _channel = await DiscordClient.GetChannelAsync(DiscordConfig.ChannelId);
+            Channel = await DiscordClient.GetChannelAsync(DiscordConfig.ChannelId);
         }
 
 
@@ -116,7 +119,7 @@ namespace roundsbot
             if (DiscordConfig.ChannelId == 0)
             {
                 DiscordConfig.ChannelId = e.Channel.Id;
-                _channel = DiscordClient.GetChannelAsync(DiscordConfig.ChannelId).Result;
+                Channel = DiscordClient.GetChannelAsync(DiscordConfig.ChannelId).Result;
             }
             else if (e.Channel.Id != DiscordConfig.ChannelId)
             {
@@ -161,21 +164,21 @@ namespace roundsbot
 
         public void SendMessage(DiscordEmbed discordEmbed)
         {
-            if (_channel == null)
+            if (Channel == null)
             {
                 return;
             }
-            _channel.SendMessageAsync(embed: discordEmbed).Wait();
+            Channel.SendMessageAsync(embed: discordEmbed).Wait();
         }
 
         public void SendMessage(string text)
         {
-            if (_channel == null)
+            if (Channel == null)
             {
                 return;
             }
             Console.WriteLine("Roundsbot: {0}", text);
-            DiscordClient.SendMessageAsync(_channel, text).Wait();
+            DiscordClient.SendMessageAsync(Channel, text).Wait();
         }
 
         public void PumpCommand(string command)

@@ -18,6 +18,8 @@ namespace roundsbot
 
         static void Main(string[] args)
         {
+            //TODO: We have some duplication here and in the terminal command processing code below.
+            //TODO: We need to cleanup the terminal command processing code.
             if (!File.Exists("conf.json"))
             {
                 var conf = new Configuration();
@@ -28,6 +30,19 @@ namespace roundsbot
                 return;
             }
 
+            try
+            {
+                Run();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                Console.WriteLine("[err]");
+            }
+        }
+
+        private static void Run()
+        {
             var config = JsonConvert.DeserializeObject<Configuration>(File.ReadAllText("conf.json"));
             _discord = new Discord();
             _discord.Connect(config);
@@ -160,6 +175,21 @@ namespace roundsbot
             {
                 _discord.SendMessage(input[1]);
             }
+            else if (input[0] == "channel")
+            {
+                Console.WriteLine(string.Format("[{0}] {1}", _discord.Channel.Id, _discord.Channel.Name));
+            }
+            else if (input[0] == "uptime")
+            {
+                var difference = TimeSpan.FromTicks(DateTime.UtcNow.Ticks - _discord.StartTime.Ticks);
+                Console.WriteLine($"{_discord.StartTime} (UTC); {difference.TotalDays:0.00} days.");
+            }
+#if DEBUG
+            else if (input[0] == "throw")
+            {
+                throw new Exception("Controlled exception");
+            }
+#endif
         }
 
         private static void EvaluateDiscordCommand(string[] commands)
