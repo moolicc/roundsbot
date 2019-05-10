@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.Net.WebSocket;
@@ -43,9 +44,15 @@ namespace roundsbot
 
         private static void Run()
         {
+            while (!HasInternet())
+            {
+            }
+
             var config = JsonConvert.DeserializeObject<Configuration>(File.ReadAllText("conf.json"));
             _discord = new Discord();
-            _discord.Connect(config);
+            _discord.OnClosed += DiscordClosed;
+            var result = _discord.Connect(config);
+            result.Wait();
 
             //Instantiate this so that the static 'Instance' field is set.
             var roundService = new RoundService(_discord);
@@ -61,6 +68,14 @@ namespace roundsbot
             _discord.AddCommand(new TimeoutCommand());
 
             Repl();
+        }
+
+        private static void DiscordClosed()
+        {
+            System.Threading.Thread.Sleep(30000);
+            _discord.OnClosed -= DiscordClosed;
+            _discord = null;
+            Run();
         }
 
         private static void Repl()
@@ -198,6 +213,23 @@ namespace roundsbot
             {
                 _discord.PumpCommand(commands[i]);
             }
+        }
+
+        private static bool HasInternet()
+        {
+            Ping ping = new Ping();
+
+            bool result = false;
+            try
+            {
+                var reply = ping.Send("8.8.8.8", 5000);
+                result = reply.Status == IPStatus.Success;
+            }
+            catch (Exception ex)
+            {
+            }
+
+            return result;
         }
     }
 }

@@ -16,8 +16,8 @@ namespace roundsbot.Commands.User
         public override void Execute(Discord discord, params string[] args)
         {
             var difference = TimeSpan.FromTicks(DateTime.UtcNow.Ticks - discord.StartTime.Ticks);
-            discord.SendCommandMessage(this, $"The bot has been online since: {discord.StartTime} (UTC).{Environment.NewLine} "+
-                                             $"The bot has been online for a total of {difference.TotalDays:0.00} days.");
+            discord.SendCommandMessage(this, $"  The bot has been online since: {discord.StartTime} (UTC).{Environment.NewLine}"+
+                                             $"  The bot has been online for a total of {difference.TotalDays:0.00} days.");
         }
     }
 }

@@ -22,6 +22,7 @@ namespace roundsbot
 
         public event Action<MessageReactionAddEventArgs> OnReactionAdded;
         public event Action<MessageReactionRemoveEventArgs> OnReactionRemoved;
+        public event Action OnClosed;
 
         private DiscordMessage _lastBotMessage;
         private DiscordMessage _lastMessage;
@@ -37,7 +38,7 @@ namespace roundsbot
             Commands.Add(command.Name, command);
         }
 
-        public async void Connect(Configuration config)
+        public async Task Connect(Configuration config)
         {
             DiscordConfig = config;
             var discordConfig = new DiscordConfiguration
@@ -54,6 +55,9 @@ namespace roundsbot
             DiscordClient.MessageCreated += MessageCreated;
             DiscordClient.MessageReactionAdded += ReactionAdded;
             DiscordClient.MessageReactionRemoved += ReactionRemoved;
+            DiscordClient.ClientErrored += ClientError;
+            DiscordClient.SocketErrored += SocketError;
+            
 
             await DiscordClient.ConnectAsync();
 
@@ -62,7 +66,25 @@ namespace roundsbot
                 Channel = await DiscordClient.GetChannelAsync(DiscordConfig.ChannelId);
             }
 
-            StartTime = DateTime.Now;
+            StartTime = DateTime.UtcNow;
+        }
+
+        private Task ClientError(ClientErrorEventArgs e)
+        {
+            Console.WriteLine("Client Error!");
+            Console.WriteLine(e.ToString());
+            Close();
+            OnClosed?.Invoke();
+            return Task.CompletedTask;
+        }
+
+        private Task SocketError(SocketErrorEventArgs e)
+        {
+            Console.WriteLine("Socket Error!");
+            Console.WriteLine(e.ToString());
+            Close();
+            OnClosed?.Invoke();
+            return Task.CompletedTask;
         }
 
         public async void Close()
@@ -72,7 +94,9 @@ namespace roundsbot
 
         public async void SetConfig(Configuration config)
         {
+            Console.WriteLine("Getting channel...");
             Channel = await DiscordClient.GetChannelAsync(DiscordConfig.ChannelId);
+            Console.WriteLine("Channel set: {0} ({1})", Channel.Id, Channel.Name);
         }
 
 
@@ -109,6 +133,7 @@ namespace roundsbot
         {
             if (e.Author.IsCurrent)
             {
+                Console.WriteLine("Setting lastBotMessage");
                 _lastBotMessage = e.Message;
                 return Task.CompletedTask;
             }
@@ -118,6 +143,7 @@ namespace roundsbot
             }
             if (DiscordConfig.ChannelId == 0)
             {
+                Console.WriteLine("Finding channel");
                 DiscordConfig.ChannelId = e.Channel.Id;
                 Channel = DiscordClient.GetChannelAsync(DiscordConfig.ChannelId).Result;
             }
@@ -128,9 +154,11 @@ namespace roundsbot
 
             RoundService.Instance.Activity = true;
             _lastMessage = e.Message;
+            Console.WriteLine("Setting lastMessage");
 
             var commandWithoutMention = e.Message.Content.Replace(DiscordClient.CurrentUser.Mention, "");
             Console.WriteLine("[{0}] {1}: {2}", e.Author.Id, e.Author.Username, commandWithoutMention);
+
             var commands = commandWithoutMention.Split(';', StringSplitOptions.RemoveEmptyEntries);
             HandleCommand(commands);
 
@@ -139,16 +167,24 @@ namespace roundsbot
 
         public void SetStatus(string status)
         {
+            Console.WriteLine("Changing status: " + status);
             DiscordClient.UpdateStatusAsync(new DiscordGame(status));
         }
 
         public void AddReaction(string reaction)
         {
+            if (_lastMessage == null)
+            {
+                Console.WriteLine("Failed to add reaction to lastMessage");
+                return;
+            }
+            Console.WriteLine("Adding {0} to last messsage (author: {1}).", reaction, _lastMessage.Author.Username);
             _lastMessage.CreateReactionAsync(DiscordEmoji.FromName(DiscordClient, reaction)).Wait();
         }
 
         public void AddBotReaction(string reaction)
         {
+            Console.WriteLine("Adding {0} to last bot messsage.", reaction);
             _lastBotMessage.CreateReactionAsync(DiscordEmoji.FromName(DiscordClient, reaction)).Wait();
         }
 
@@ -177,7 +213,7 @@ namespace roundsbot
             {
                 return;
             }
-            Console.WriteLine("Roundsbot: {0}", text);
+            Console.WriteLine("Sending to channel {0} ({1}){2}Roundsbot: {3}", Channel.Id, Channel.Name, Environment.NewLine, text);
             DiscordClient.SendMessageAsync(Channel, text).Wait();
         }
 
