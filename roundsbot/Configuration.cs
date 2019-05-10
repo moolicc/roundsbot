@@ -25,7 +25,7 @@ namespace roundsbot
             BreakLength = 5;
             TimeoutCount = 5;
 
-            VersionString = "Roundsbot by MooCow • Version 1.1.0.1 • September 4, 2018";
+            VersionString = "Roundsbot by MooCow • Version 1.1.0.2 • May 10, 2019";
         }
     }
 }
