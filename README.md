@@ -24,7 +24,7 @@ Will print out all the commands.
 Starts running rounds.
 
 #### @roundsbot stop ####
-Starts running rounds.
+Stops running rounds.
 
 #### @roundsbot uptime ####
 Displays the length of time the bot has been online.
@@ -33,7 +33,7 @@ Displays the length of time the bot has been online.
 Make your changed, submit a pull request.
 
 ## Authors ##
-IcecreamBurglar (Discord: MooCow #9699)
+MooCow #9699
 
-Meet the contributers at https://github.com/Icecream-Burglar/roundsbot/contributors
+Meet the contributers at https://github.com/moolicc/roundsbot/contributors
 
