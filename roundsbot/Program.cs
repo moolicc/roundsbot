@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.Net.WebSocket;
 using Newtonsoft.Json;
-using roundsbot.Commands.User;
+using roundsbot.Commands;
 
 namespace roundsbot
 {

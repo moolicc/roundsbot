@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace roundsbot.Commands.User
+namespace roundsbot.Commands
 {
-    class UptimeCommand : UserCommand
+    class UptimeCommand : CommandBase
     {
         public override string Name => "uptime";
         public override string Usage => "uptime";

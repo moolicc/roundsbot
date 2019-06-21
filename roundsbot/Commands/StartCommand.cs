@@ -1,6 +1,6 @@
-﻿namespace roundsbot.Commands.User
+﻿namespace roundsbot.Commands
 {
-    class StartCommand : UserCommand
+    class StartCommand : CommandBase
     {
         public override string Name => "start";
         public override string Usage => "start";

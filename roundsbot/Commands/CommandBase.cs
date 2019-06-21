@@ -9,7 +9,6 @@ namespace roundsbot.Commands
         public abstract string Name { get; }
         public abstract string Usage { get; }
         public abstract string Description { get; }
-        public abstract bool Hidden { get; }
 
         public abstract void Execute(Discord discord, params string[] args);
     }

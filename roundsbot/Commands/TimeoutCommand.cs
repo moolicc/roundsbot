@@ -1,6 +1,6 @@
-﻿namespace roundsbot.Commands.User
+﻿namespace roundsbot.Commands
 {
-    class TimeoutCommand : UserCommand
+    class TimeoutCommand : CommandBase
     {
         public override string Name => "timeout";
         public override string Usage => "timeout <value>";

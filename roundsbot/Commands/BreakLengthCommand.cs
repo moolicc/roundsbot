@@ -1,6 +1,6 @@
-﻿namespace roundsbot.Commands.User
+﻿namespace roundsbot.Commands
 {
-    class BreakLengthCommand : UserCommand
+    class BreakLengthCommand : CommandBase
     {
         public override string Name => "breaklength";
         public override string Usage => "breaklength <value>";

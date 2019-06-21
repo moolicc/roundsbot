@@ -1,6 +1,6 @@
-﻿namespace roundsbot.Commands.User
+﻿namespace roundsbot.Commands
 {
-    class RoundLengthCommand : UserCommand
+    class RoundLengthCommand : CommandBase
     {
         public override string Name => "roundlength";
         public override string Usage => "roundlength <value>";
